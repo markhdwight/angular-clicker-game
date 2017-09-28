@@ -7,6 +7,8 @@ angular.module('clickerApp').service('clickerService', ['$interval', function ($
         this.numAutos = 0
         this.autoCost = 100
         this.autoClickerArray = []
+
+        let canReset = false
     
         this.inactiveColor = { 'background-color':'grey'}
         this.activeColor = { 'background-color':'white'}
@@ -27,7 +29,8 @@ angular.module('clickerApp').service('clickerService', ['$interval', function ($
                 this.bonus=parseFloat(Cookies.get("bonus"))
                 this.numAutos = parseInt(Cookies.get("numAutos"))
 
-                alert(this.total+";"+this.bonus+";"+this.numAutos)
+                if(this.total > 0 || this.bonus > 1 || this.numAutos > 0)
+                    canReset = true
     
                 if(this.total>=this.multCost)
                     this.leftButtonColor = this.activeColor
@@ -55,6 +58,7 @@ angular.module('clickerApp').service('clickerService', ['$interval', function ($
             this.total += this.bonus
 
             this.saveCookie()
+            canReset = true
             
             if(this.total >= this.autoCost)
             {
@@ -147,20 +151,24 @@ angular.module('clickerApp').service('clickerService', ['$interval', function ($
         }
         
         this.reset = () => {
-            this.total=0
-            this.bonus=1
-            this.numAutos=0
-
-            this.saveCookie()
-
-            this.leftButtonColor = this.inactiveColor
-            this.rightButtonColor = this.inactiveColor
             
-            for(let i = 0; i < this.autoClickerArray.length; i++)
+            if(canReset)
+            {
+                this.total=0
+                this.bonus=1
+                this.numAutos=0
+
+                this.saveCookie()
+                canReset = false
+
+                this.leftButtonColor = this.inactiveColor
+                this.rightButtonColor = this.inactiveColor
+            
+                for(let i = 0; i < this.autoClickerArray.length; i++)
                 {
                     $interval.cancel(this.autoClickerArray[i])
                 }
-
+            }
         }
 
         this.getFromCookie()
