@@ -19,6 +19,9 @@ angular.module('clickerApp').service('clickerService', ['$interval', function ($
             Cookies.set("total",this.total,{expires:100})
             Cookies.set("bonus",this.bonus,{expires:100})
             Cookies.set("numAutos",this.numAutos,{expires:100})
+            Cookies.set("multiplier",this.multiplier,{expires:100})
+            Cookies.set("multCost",this.multCost,{expires:100})
+            Cookies.set("autoCost",this.autoCost,{expires:100})
         }
         
         this.getFromCookie = () => {
@@ -28,6 +31,9 @@ angular.module('clickerApp').service('clickerService', ['$interval', function ($
                 this.total=parseFloat(Cookies.get("total"))
                 this.bonus=parseFloat(Cookies.get("bonus"))
                 this.numAutos = parseInt(Cookies.get("numAutos"))
+                this.multiplier = parseFloat(Cookies.get("multiplier"))
+                this.multCost = parseInt(Cookies.get("multCost"))
+                this.autoCost = parseInt(Cookies.get("autoCost"))
 
                 if(this.total > 0 || this.bonus > 1 || this.numAutos > 0)
                     canReset = true
@@ -50,6 +56,9 @@ angular.module('clickerApp').service('clickerService', ['$interval', function ($
                 this.total=0
                 this.bonus=1
                 this.numAutos=0
+                this.multiplier = 1.2
+                this.multCost = 10
+                this.autoCost = 100
             }
         
         }
@@ -90,6 +99,9 @@ angular.module('clickerApp').service('clickerService', ['$interval', function ($
             {
                 this.bonus *= this.multiplier
                 this.total -= this.multCost
+                
+                this.multiplier += .3
+                this.multCost *= 2
 
                 this.saveCookie()
 
@@ -134,6 +146,7 @@ angular.module('clickerApp').service('clickerService', ['$interval', function ($
                 
                 this.numAutos++
                 this.total -= this.autoCost
+                this.autoCost *= 2
 
                 this.saveCookie()
 
@@ -157,6 +170,9 @@ angular.module('clickerApp').service('clickerService', ['$interval', function ($
                 this.total=0
                 this.bonus=1
                 this.numAutos=0
+                this.multiplier = 1.2
+                this.multCost = 10
+                this.autoCost = 100
 
                 this.saveCookie()
                 canReset = false
